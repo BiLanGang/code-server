@@ -2,7 +2,6 @@ import { logger, field } from "@coder/logger"
 
 export interface Options {
   base: string
-  csStaticBase: string
   logLevel: number
 }
 
@@ -82,7 +81,6 @@ export const getOptions = <T extends Options>(): T => {
   logger.level = options.logLevel
 
   options.base = resolveBase(options.base)
-  options.csStaticBase = resolveBase(options.csStaticBase)
 
   logger.debug("got options", field("options", options))
 

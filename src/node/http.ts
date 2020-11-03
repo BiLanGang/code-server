@@ -21,13 +21,11 @@ export interface CommonTemplateVars extends Options {
 
 export const commonTemplateVars = <T extends Options>(
   req: express.Request,
-  extraOpts?: Omit<T, "base" | "csStaticBase" | "logLevel">,
+  extraOpts?: Omit<T, "base" | "logLevel">,
 ): CommonTemplateVars => {
   const base = relativeRoot(req)
-  const csStaticBase = base + "/static/"
   const coderOptions: Options = {
     base,
-    csStaticBase,
     logLevel: logger.level,
     ...extraOpts,
   }
@@ -35,16 +33,6 @@ export const commonTemplateVars = <T extends Options>(
   return {
     ...coderOptions,
     coderOptions,
-  }
-}
-
-/**
- * Injects variables into template scope.
- */
-export const templateMiddleware = (locals: express.Application["locals"]): express.RequestHandler => {
-  return (req, _, next) => {
-    Object.assign(locals, commonTemplateVars(req))
-    next()
   }
 }
 

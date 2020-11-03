@@ -4,7 +4,7 @@ import { promises as fs } from "fs"
 import * as path from "path"
 import { WorkbenchOptions } from "../../../lib/vscode/src/vs/server/ipc"
 import { commit, version } from "../constants"
-import { authenticated, ensureAuthenticated, redirect } from "../http"
+import { authenticated, commonTemplateVars, ensureAuthenticated, redirect } from "../http"
 import { getMediaMime, pathToFsPath } from "../util"
 import { VscodeProvider } from "../vscode"
 
@@ -37,6 +37,7 @@ router.get("/", async (req, res) => {
   workbenchOptions.productConfiguration.codeServerVersion = version
 
   res.render("vscode", {
+    ...commonTemplateVars(req),
     disableTelemetry: !!req.args["disable-telemetry"],
     workbenchOptions,
   })

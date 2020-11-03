@@ -6,9 +6,9 @@ export const router = Router()
 
 const iconSizes = [96, 128, 192, 256, 384, 512]
 
-export const createWebManifest = ({ base, csStaticBase }: CommonTemplateVars) => {
+export const createWebManifest = ({ base }: CommonTemplateVars) => {
   const icons = iconSizes.map((iconSize) => ({
-    src: normalize(`${csStaticBase}/media/pwa-icon-${iconSize}.png`),
+    src: normalize(`${base}/static/media/pwa-icon-${iconSize}.png`),
     type: "image/png",
     sizes: `${iconSize}x${iconSize}`,
   }))
@@ -27,5 +27,5 @@ export const createWebManifest = ({ base, csStaticBase }: CommonTemplateVars) =>
 router.get("/code-server.webmanifest", (req, res) => {
   const webManifest = commonTemplateVars(req)
 
-  res.contentType("application/manifest+json").json(webManifest)
+  res.contentType("application/manifest+json").json(createWebManifest(webManifest))
 })

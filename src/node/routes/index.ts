@@ -11,7 +11,7 @@ import { plural } from "../../common/util"
 import { AuthType, DefaultedArgs } from "../cli"
 import { rootPath } from "../constants"
 import { Heart } from "../heart"
-import { templateMiddleware } from "../http"
+import { commonTemplateVars } from "../http"
 import { loadPlugins } from "../plugin"
 import * as domainProxy from "../proxy"
 import { getMediaMime, paths } from "../util"
@@ -55,7 +55,6 @@ export const register = async (app: Express, server: http.Server, args: Defaulte
   app.use(cookieParser())
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
-  app.use(templateMiddleware(app.locals))
 
   server.on("upgrade", () => {
     heart.beat()
@@ -85,10 +84,10 @@ export const register = async (app: Express, server: http.Server, args: Defaulte
     return next()
   })
 
-  app.use("/", _static.router)
   app.use("/", domainProxy.router)
   app.use("/", vscode.router)
   app.use("/", manifest.router)
+  app.use("/", _static.router)
 
   app.use("/healthz", health.router)
   if (args.auth === AuthType.Password) {
@@ -113,6 +112,7 @@ export const register = async (app: Express, server: http.Server, args: Defaulte
 
     try {
       res.status(status).render("error", {
+        ...commonTemplateVars(req),
         HOME_PATH: (typeof req.query.to === "string" && req.query.to) || "/",
         ERROR_TITLE: status,
         ERROR_HEADER: status,
